@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=git-gui
+Comment=
+Exec=git-gui citool
+Icon=/sd-root/tools-current/git/share/git-gui/lib/git-gui.ico
+Path=/sd-data/proj-slava/langdev2022-site/
+Terminal=false
+StartupNotify=false
