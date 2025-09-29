@@ -1,0 +1,16 @@
+{
+  "name": "My Static App",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "forwardPorts": [3003],
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode-remote.remote-containers"
+      ]
+    }
+  }
+}
