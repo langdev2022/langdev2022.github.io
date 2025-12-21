@@ -13,10 +13,25 @@
 </script>  
 <body>
 
+  Starting point to learn core spring framework 
+https://docs.spring.io/spring-framework/reference/core/beans/introduction.html
+
   <p>Spring Application context hierarchy diagram, on click will be opened in a separate tab</p>
   <a href="ApplicationContext.drawio.png" target="_blank">
     <img src="ApplicationContext.drawio.png"  style="width:800px;height:600px;"/>
   </a>
+
+So being a little bit familiar with the Spring Application context let's then discover the ways it's created.
+
+
+
+
+
+  @SpringBootConfiguration
+@EnableAutoConfiguration
+@ComponentScan(excludeFilters = { @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
+public @interface SpringBootApplication {
 
 
 <p>Documentation formats:</p>
