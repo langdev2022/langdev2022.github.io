@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-astro-cid-dy4epwo5>
+    <head>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF9HH7G5MK"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-HF9HH7G5MK');
+        </script>
+        
+    <style>main[data-astro-cid-dy4epwo5]{width:calc(100% - 2em);max-width:100%;margin:0}.hero-image[data-astro-cid-dy4epwo5]{width:100%}.hero-image[data-astro-cid-dy4epwo5] img[data-astro-cid-dy4epwo5]{display:block;margin:0 auto;border-radius:12px;box-shadow:var(--box-shadow)}.prose[data-astro-cid-dy4epwo5]{width:720px;max-width:calc(100% - 2em);margin:auto;padding:1em;color:rgb(var(--gray-dark))}.title[data-astro-cid-dy4epwo5]{margin-bottom:1em;padding:1em 0;text-align:center;line-height:1}.title[data-astro-cid-dy4epwo5] h1[data-astro-cid-dy4epwo5]{margin:0 0 .5em}.date[data-astro-cid-dy4epwo5]{margin-bottom:.5em;color:rgb(var(--gray))}.last-updated-on[data-astro-cid-dy4epwo5]{font-style:italic}
+</style></head>
+    
+
+    <body data-astro-cid-dy4epwo5>
+        <main data-astro-cid-dy4epwo5>
+            <a href="/" data-astro-cid-dy4epwo5>Back to main page</a>
+            <article data-astro-cid-dy4epwo5>
+                
+                    <h2 id="description">Description</h2>
+<p>Here are the steps for samba server installation with anonymous access and enabled Linux security context.</p>
+<h3 id="environment">Environment</h3>
+<p>AlmaLinux 10.</p>
+<h3 id="installation">Installation</h3>
+<p>run the commands below one by one, also check the absence of errors in console</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#A0A1A7;font-style:italic"># Updates each package to the latest version that is both available and resolvable.</span></span>
+<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> dnf</span><span style="color:#50A14F"> upgrade</span><span style="color:#986801"> -y</span><span style="color:#383A42"> </span></span>
+<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> dnf</span><span style="color:#50A14F"> install</span><span style="color:#50A14F"> samba</span><span style="color:#50A14F"> samba-common</span></span>
+<span class="line"><span style="color:#A0A1A7;font-style:italic"># enabling samba server and netbios </span></span>
+<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> systemctl</span><span style="color:#50A14F"> enable</span><span style="color:#50A14F"> smb</span><span style="color:#50A14F"> nmb</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#A0A1A7;font-style:italic"># enabling staring server and netbios </span></span>
+<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> systemctl</span><span style="color:#50A14F"> start</span><span style="color:#50A14F"> smb</span><span style="color:#50A14F"> nmb</span></span></code></pre>
+<h3 id="permit-samba-traffic">permit samba traffic</h3>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">    sudo</span><span style="color:#50A14F"> firewall-cmd</span><span style="color:#986801"> --permanent</span><span style="color:#986801"> --zone=public</span><span style="color:#986801"> --add-service=samba</span></span>
+<span class="line"><span style="color:#4078F2">    sudo</span><span style="color:#50A14F"> firewall-cmd</span><span style="color:#986801"> --reload</span></span></code></pre>
+<h3 id="user-configuration">User configuration</h3>
+<p>For ease access a dedicated use group is created <code>smbsharegrp</code>,  to this group anonymous user will be added.
+Or maybe added different users to obtain ro access to directories with different owners.</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#A0A1A7;font-style:italic"># creating special group for samba users</span></span>
+<span class="line"><span style="color:#4078F2">groupadd</span><span style="color:#50A14F"> smbsharegrp</span></span></code></pre>
+<p>Add <code>nobody</code> required users to  <code>smbsharegrp</code></p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> usermod</span><span style="color:#986801"> -aG</span><span style="color:#50A14F"> smbsharegrp</span><span style="color:#50A14F"> nobody</span></span>
+<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> usermod</span><span style="color:#986801"> -aG</span><span style="color:#50A14F"> smbsharegrp</span><span style="color:#383A42"> &lt;</span><span style="color:#50A14F">some-use</span><span style="color:#383A42">r&gt;</span></span></code></pre>
+<p>To permit guest access adding a user(-a) to samba server without password (-n)</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> smbpasswd</span><span style="color:#986801"> -a</span><span style="color:#986801"> -n</span><span style="color:#50A14F"> nobody</span></span></code></pre>
+<p>At the same time <code>nobody</code> is locked on the host</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> passwd</span><span style="color:#986801"> -S</span><span style="color:#50A14F"> nobody</span></span>
+<span class="line"><span style="color:#A0A1A7;font-style:italic"># nobody L 2025-06-05 0 99999 7 -1</span></span>
+<span class="line"><span style="color:#A0A1A7;font-style:italic"># L - locked</span></span></code></pre>
+<h3 id="samba-sever-configuration">Samba Sever Configuration</h3>
+<p>Commands to check config validation</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#A0A1A7;font-style:italic"># testparm check config is valid</span></span>
+<span class="line"><span style="color:#4078F2">testparm</span><span style="color:#50A14F"> /etc/samba/smb.conf</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#A0A1A7;font-style:italic">#without prompt</span></span>
+<span class="line"><span style="color:#4078F2">testparm</span><span style="color:#986801"> -s</span><span style="color:#50A14F"> /etc/samba/smb.conf</span></span></code></pre>
+<p>change MY_WORK_GROUP to the required workgroup
+specify guest account <code>guest account = nobody</code> and map users with bad password to guest <code>map to guest = Bad Password</code>
+and permit guest access <code>usershare allow guests = yes</code></p>
+<p>edit <code>/etc/samba/smb.conf</code> and check that values are configured</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="plaintext"><code><span class="line"><span>    workgroup = MY_WORK_GROUP</span></span>
+<span class="line"><span>    security = user</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    passdb backend = tdbsam</span></span>
+<span class="line"><span>    guest account = nobody</span></span>
+<span class="line"><span>    map to guest = Bad Password</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    printing = cups</span></span>
+<span class="line"><span>    printcap name = cups</span></span>
+<span class="line"><span>    load printers = yes</span></span>
+<span class="line"><span>    cups options = raw</span></span>
+<span class="line"><span>    usershare allow guests = yes</span></span>
+<span class="line"><span></span></span></code></pre>
+<p>Example how to add share with name:<code>myshare</code>.</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="plaintext"><code><span class="line"><span>[myshare]</span></span>
+<span class="line"><span>        path = /tmp/share</span></span>
+<span class="line"><span>        guest ok = yes</span></span>
+<span class="line"><span>        read only = yes</span></span></code></pre>
+<p>then save and check with <code>testparm -s /etc/samba/smb.conf</code></p>
+<h3 id="security-configuration">Security Configuration</h3>
+<p>Temporary disable linux security to check samba access</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 0</span></span></code></pre>
+<p>after disabling, shared directories should be available.</p>
+<p>change file security context for directory</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">chcon</span><span style="color:#986801"> -t</span><span style="color:#50A14F"> samba_share_t</span><span style="color:#50A14F"> /tmp/share&quot; </span></span></code></pre>
+<p><code>samba_share_t</code> is added by selinux-policy</p>
+<p>Maps directory and sub dirs to a samba_share_t</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">semanage</span><span style="color:#50A14F"> fcontext</span><span style="color:#986801"> -a</span><span style="color:#986801"> -t</span><span style="color:#50A14F"> samba_share_t</span><span style="color:#50A14F"> &quot;/tmp/share(/.*)?&quot;</span></span></code></pre>
+<p>It changes the SELinux context of the specified path to samba_share_t.
+This would be necessary if you have SELinux in enforcing mode on your system and the
+path being referred to was not previously designated as a Samba share (via SELinux labeling).</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> restorecon</span><span style="color:#986801"> -Rv</span><span style="color:#50A14F"> /tmp/share</span></span></code></pre>
+            </article>
+        </main>
+    </body></html>

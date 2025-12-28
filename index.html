@@ -1,76 +1,30 @@
 <!DOCTYPE html>
-<html>
-  <head>
-  </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HF9HH7G5MK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<html lang="en">
+    <head>
 
-  gtag('config', 'G-HF9HH7G5MK');
-</script>  
-<body>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HF9HH7G5MK"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-  Starting point to learn core spring framework 
-
-
-  
-https://docs.spring.io/spring-framework/reference/core/beans/introduction.html
-
-  <p>Spring Application context hierarchy diagram, on click will be opened in a separate tab</p>
-  <a href="ApplicationContext.drawio.png" target="_blank">
-    <img src="ApplicationContext.drawio.png"  style="width:800px;height:600px;"/>
-  </a>
-
-So being a little bit familiar with the Spring Application context let's then discover the ways it's created.
-
-
-
-
-
-  @SpringBootConfiguration
-@EnableAutoConfiguration
-@ComponentScan(excludeFilters = { @Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
-		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) })
-public @interface SpringBootApplication {
-
-
-
-  <p>
-    Samba server installation with anonymous access
-    </p>
-    <p>Installing samba server</p>
-    <p>sudo dnf update -y</p>
-    <p>sudo dnf install samba samba-common</p>
-    <p>      sudo systemctl enable smb nmb    </p>
-    <p>sudo systemctl start smb nmb</p>
-    <p></p>
-    <p>Enabling firewall</p>
-    <p>sudo firewall-cmd --permanent --zone=public --add-service=samba</p>
-    <p>sudo firewall-cmd --reload</p>
+            gtag('config', 'G-HF9HH7G5MK');
+        </script>
+        <title>IT notes</title>
+    </head>
     
 
-    <p></p>
+    <body>
+        <p>
+        <a href="spring-hierarchy">
+            Spring Application context hierarchy
+        </a>
+        </p>
 
 
-
-
-
-
-
-
-  
-
-<p>Documentation formats:</p>
-  <ul>
-    <li>.md - https://en.wikipedia.org/wiki/Markdown</li>
-    <li>.rst - https://en.wikipedia.org/wiki/ReStructuredText</li>
-    <li>.ad, .adoc, .asc, .asciidoc, optionally .txt - https://en.wikipedia.org/wiki/AsciiDoc</li>
-  </ul>
-
-
-</body>
-
-</html>
+        <p>
+        <a href="samba">
+            Configure samba server with SeContext
+        </a>
+        </p>
+    </body></html>
