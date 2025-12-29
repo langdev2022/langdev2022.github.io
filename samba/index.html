@@ -94,6 +94,10 @@ and permit guest access <code>usershare allow guests = yes</code></p>
 This would be necessary if you have SELinux in enforcing mode on your system and the
 path being referred to was not previously designated as a Samba share (via SELinux labeling).</p>
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> restorecon</span><span style="color:#986801"> -Rv</span><span style="color:#50A14F"> /tmp/share</span></span></code></pre>
+<p>to check that attributes were set correctly set</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="plaintext"><code><span class="line"><span>ls -laZ</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># drwxrwxr-x.  5 &lt;user_owner&gt; smbsharegrp unconfined_u:object_r:samba_share_t:s0  4096 Jul  7 18:20 &lt;dir_name&gt;</span></span></code></pre>
 <p>enable back security</p>
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 1</span></span></code></pre>
 <p>Check access to share, if everything is configured correctly then directories will be accessible</p>
