@@ -38,13 +38,6 @@
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">    sudo</span><span style="color:#50A14F"> firewall-cmd</span><span style="color:#986801"> --permanent</span><span style="color:#986801"> --zone=public</span><span style="color:#986801"> --add-service=samba</span></span>
 <span class="line"><span style="color:#4078F2">    sudo</span><span style="color:#50A14F"> firewall-cmd</span><span style="color:#986801"> --reload</span></span></code></pre>
 <h3 id="user-configuration">User configuration</h3>
-<p>For ease access a dedicated use group is created <code>smbsharegrp</code>,  to this group anonymous user will be added.
-Or maybe added different users to obtain ro access to directories with different owners.</p>
-<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#A0A1A7;font-style:italic"># creating special group for samba users</span></span>
-<span class="line"><span style="color:#4078F2">groupadd</span><span style="color:#50A14F"> smbsharegrp</span></span></code></pre>
-<p>Add <code>nobody</code> required users to  <code>smbsharegrp</code></p>
-<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> usermod</span><span style="color:#986801"> -aG</span><span style="color:#50A14F"> smbsharegrp</span><span style="color:#50A14F"> nobody</span></span>
-<span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> usermod</span><span style="color:#986801"> -aG</span><span style="color:#50A14F"> smbsharegrp</span><span style="color:#383A42"> &lt;</span><span style="color:#50A14F">some-use</span><span style="color:#383A42">r&gt;</span></span></code></pre>
 <p>To permit guest access adding a user(-a) to samba server without password (-n)</p>
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> smbpasswd</span><span style="color:#986801"> -a</span><span style="color:#986801"> -n</span><span style="color:#50A14F"> nobody</span></span></code></pre>
 <p>At the same time <code>nobody</code> is locked on the host</p>
@@ -82,13 +75,13 @@ and permit guest access <code>usershare allow guests = yes</code></p>
 <span class="line"><span>        read only = yes</span></span></code></pre>
 <p>then save and check with <code>testparm -s /etc/samba/smb.conf</code></p>
 <h3 id="security-configuration">Security Configuration</h3>
-<p>Temporary disable linux security to check samba access</p>
-<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 0</span></span></code></pre>
-<p>after disabling, shared directories should be available.</p>
-<p>change file security context for directory</p>
+<p>Linux has a file security context which has additional parameters.
+To observe this parameters use</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="plaintext"><code><span class="line"><span>ls -laZ</span></span></code></pre>
+<p>change file security context for directory use the following command</p>
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">chcon</span><span style="color:#986801"> -t</span><span style="color:#50A14F"> samba_share_t</span><span style="color:#50A14F"> /tmp/share&quot; </span></span></code></pre>
 <p><code>samba_share_t</code> is added by selinux-policy</p>
-<p>Maps directory and sub dirs to a samba_share_t</p>
+<p>but it will add <code>samba_share_t</code> temporary, for permanent use  the command below</p>
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">semanage</span><span style="color:#50A14F"> fcontext</span><span style="color:#986801"> -a</span><span style="color:#986801"> -t</span><span style="color:#50A14F"> samba_share_t</span><span style="color:#50A14F"> &quot;/tmp/share(/.*)?&quot;</span></span></code></pre>
 <p>It changes the SELinux context of the specified path to samba_share_t.
 This would be necessary if you have SELinux in enforcing mode on your system and the
@@ -98,9 +91,12 @@ path being referred to was not previously designated as a Samba share (via SELin
 <pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="plaintext"><code><span class="line"><span>ls -laZ</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span># drwxrwxr-x.  5 &lt;user_owner&gt; smbsharegrp unconfined_u:object_r:samba_share_t:s0  4096 Jul  7 18:20 &lt;dir_name&gt;</span></span></code></pre>
-<p>enable back security</p>
-<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 1</span></span></code></pre>
 <p>Check access to share, if everything is configured correctly then directories will be accessible</p>
+<p>To temporary disable security policy use</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 0</span></span></code></pre>
+<p>and</p>
+<pre class="astro-code one-light" style="background-color:#FAFAFA;color:#383A42;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#4078F2">sudo</span><span style="color:#50A14F"> setenforce</span><span style="color:#986801"> 1</span></span></code></pre>
+<p>to enable it</p>
             </article>
         </main>
     </body></html>
