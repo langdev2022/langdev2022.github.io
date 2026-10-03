@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://langdev2022.github.io/sitemap.xml
